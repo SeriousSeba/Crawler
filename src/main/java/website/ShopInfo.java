@@ -1,7 +1,7 @@
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+package website;
 
-import java.net.URL;
+import org.jsoup.nodes.Element;
+import product.ProductInfo;
 
 public class ShopInfo {
 
@@ -10,6 +10,7 @@ public class ShopInfo {
     private String searchURL;
     private String searchURLSuffix;
     private String hrefs;
+
 
     public ShopInfo(String name,String url,String searchURL,String searchURLSuffix,String hrefs){
         this.name=name;
@@ -82,4 +83,11 @@ public class ShopInfo {
 
         return productInfo;
     }
+
+
+
+
+
+
+
 }

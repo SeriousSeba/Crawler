@@ -1,12 +1,20 @@
+package website;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import product.ProductInfo;
+import sun.awt.image.ImageWatched;
+import website.PageInfo;
+import website.ShopInfo;
 
+import javax.print.Doc;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 
 
 public class WebShop {
@@ -16,21 +24,37 @@ public class WebShop {
         this.shopInfo=shopInfo;
     }
 
+    public LinkedList<String> getShopsList(ProductInfo productInfo){
+        String site=productInfo.getProductUrl();
+        Document document=null;
+        try {
+            document=getSiteDocument(site);
 
-    public PageInfo[] getPages(String productName,int limit) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    public ProductInfo[] getProducts(String productName, int limit) {
         String siteURL = parseProductName(productName);
-        LinkedList<PageInfo> pageInfos=new LinkedList<PageInfo>();
+        LinkedList<ProductInfo> productInfos=new LinkedList<ProductInfo>();
         PageInfo pageInfo;
         for(int i=0;i<limit && siteURL!=null;i++){
             pageInfo=getPageInfo(siteURL);
             if(pageInfo==null)
                 break;
             siteURL=pageInfo.getNextSiteURL();
-            pageInfos.addLast(pageInfo);
+            ProductInfo[] tmpInfos=validateProducts(pageInfo.getProductInfos(),productName);
+            for(ProductInfo productInfo:tmpInfos) {
+                productInfos.addLast(productInfo);
+            }
         }
 
-        PageInfo[] tab=new PageInfo[pageInfos.size()];
-        pageInfos.toArray(tab);
+        ProductInfo[] tab=new ProductInfo[productInfos.size()];
+        productInfos.toArray(tab);
         return tab;
 ////////////////////////////////////
     }
@@ -46,7 +70,7 @@ public class WebShop {
     }
 
     private PageInfo getPageInfo(String siteURL){
-        Document document= null;
+        Document document;
         Elements elements;
         try {
             document = getSiteDocument(siteURL);
@@ -55,6 +79,7 @@ public class WebShop {
             return null;
         }
         LinkedList<ProductInfo> infos=new LinkedList<ProductInfo>();
+
 
         for(Element element:elements){
             infos.addLast(
@@ -67,16 +92,15 @@ public class WebShop {
                 shopInfo.getUrl() + getNextSiteLink(document)
         );
 
-
         ProductInfo[] productInfos=new ProductInfo[infos.size()];
-       infos.toArray(productInfos);
+        infos.toArray(productInfos);
         pageInfo.setProductInfos(productInfos);
 
         return pageInfo;
     }
 
     private String getNextSiteLink(Document document){
-        String site=null;
+        String site;
         Element button = document.select("[rel=next]").first();
         if(button==null)
             return null;
@@ -93,8 +117,26 @@ public class WebShop {
         return document;
     }
 
-
-
+    private ProductInfo[] validateProducts(ProductInfo[] productInfos,String productName) {
+        LinkedList<ProductInfo> resultList=new LinkedList<ProductInfo>();
+        StringBuilder regexBuilder=new StringBuilder();
+        regexBuilder.append(".*");
+        for(String part:productName.split(" "))
+            regexBuilder.append(part+".*");
+        String regex=regexBuilder.toString();
+        for(ProductInfo productInfo:productInfos) {
+            if(productInfo.getProductName().matches(regex))
+                resultList.addLast(productInfo);
+        }
+        ProductInfo[] result=new ProductInfo[resultList.size()];
+        resultList.toArray(result);
+        return result;
+    }
 
 
 }
+
+
+
+
+

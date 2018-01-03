@@ -1,3 +1,5 @@
+package product;
+
 public class ProductInfo {
     private String productImageUrl;
     private String productUrl;
@@ -58,4 +60,18 @@ public class ProductInfo {
     public String getProdcutCategory() { return prodcutCategory; }
 
     public void setProdcutCategory(String prodcutCategory) { this.prodcutCategory = prodcutCategory; }
+
+    public void getInfo(){
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("Nazwa: " + getProductName() + "\n");
+            stringBuilder.append("Id: " + getProductId() + "\n");
+            stringBuilder.append("Kategoria: " + getProdcutCategory() + "\n");
+            stringBuilder.append("Ocena: " + getProductScore() + "\n");
+            stringBuilder.append("URL: " + getProductUrl() + "\n");
+            stringBuilder.append("ImageURL: " + getproductImageUrl() + "\n");
+            stringBuilder.append("Najnizsza cena: " + getProductBottom() + "\n\n\n");
+            System.out.println(stringBuilder.toString());
+
+    }
+
 }
