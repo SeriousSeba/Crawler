@@ -1,3 +1,6 @@
+import com.google.gson.JsonObject;
+import product.ProductInfo;
+import utils.JsonUtils;
 import website.ShopInfo;
 import website.WebShop;
 
@@ -10,7 +13,7 @@ public class CrawlingMachine {
                 "div[data-pid]");//
         WebShop webShop=new WebShop(shopInfo);
         ShopCrawler shopCrawler=new ShopCrawler(webShop,"Pan Tadeusz",20);
-        shopCrawler.run();
+         shopCrawler.run();
 
     }
 
